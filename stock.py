@@ -3,19 +3,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-# Step 1: Fetch Stock Data from Alpha Vantage API
 def fetch_stock_data(ticker):
     """
     Fetch daily stock data for a given ticker symbol from Alpha Vantage.
     Returns the stock data as a pandas DataFrame.
     """
-    # Your Alpha Vantage API key
-    api_key = '4A4GN5S7EHPZZO8P'  # Update with your own key
+    api_key = '4A4GN5S7EHPZZO8P'  
     
-    # Alpha Vantage URL for Time Series Daily
     url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}&outputsize=compact&datatype=json'
     
-    # Make the API call
     response = requests.get(url)
     data = response.json()
     
@@ -27,14 +23,11 @@ def fetch_stock_data(ticker):
     # Extract the 'Time Series (Daily)' data
     time_series = data['Time Series (Daily)']
     
-    # Convert the time series data into a pandas DataFrame
     stock_data = pd.DataFrame.from_dict(time_series, orient='index')
     
-    # Rename columns for clarity and convert them to numeric values
     stock_data.columns = ['open', 'high', 'low', 'close', 'volume']
     stock_data = stock_data.apply(pd.to_numeric, errors='coerce')
     
-    # Reverse the DataFrame to have the most recent date at the bottom
     stock_data = stock_data[::-1]
     
     # Reset index to have the date as a column
@@ -44,7 +37,6 @@ def fetch_stock_data(ticker):
     
     return stock_data
 
-# Step 2: Calculate Simple Moving Averages (SMA)
 def calculate_moving_averages(stock_data, short_window=50, long_window=200):
     """
     Calculate short and long simple moving averages for trend analysis.
@@ -54,7 +46,6 @@ def calculate_moving_averages(stock_data, short_window=50, long_window=200):
     
     return stock_data
 
-# Step 3: Generate Buy/Sell Alerts Based on Moving Averages
 def generate_alerts(stock_data):
     """
     Generate buy/sell signals based on SMA crossovers.
@@ -72,7 +63,6 @@ def generate_alerts(stock_data):
     
     return buy_signals, sell_signals
 
-# Step 4: Plot the Data and Alerts
 def plot_stock_data(stock_data, buy_signals, sell_signals):
     """
     Plot stock closing prices along with SMA50 and SMA200.
@@ -119,7 +109,6 @@ def plot_stock_data(stock_data, buy_signals, sell_signals):
     plt.tight_layout()
     plt.show()
 
-# Step 5: Main Execution
 if __name__ == "__main__":
     # Fetch stock data for AAPL
     df = fetch_stock_data('AAPL')
